@@ -35,10 +35,14 @@ class Store:
 		output = ""
 		for section, contents in self.sections.items():
 			output += '{}<h1 id="{}">{}</h1>\n'.format(indentation, slugify(section), section)
+			output += '{}<table>'.format(indentation)
 			for question, answer in contents:
-				output += "{}<h3>{}</h2>\n".format(indentation, question)
+				question_html ="<p>{}</p>\n".format(question)
+				answer_html = ""
 				for answer_line in answer.split("\n"):
-					output += "{}<p>{}</p>\n".format(indentation, clean(answer_line))
+					answer_html += "<p>{}</p>\n".format(clean(answer_line))
+				output += "{}<tr><td>{}</td><td>{}</td></tr>".format(indentation, question_html, answer_html)
+			output += "{}</table>".format(indentation)
 		return output
 		
 	def barf_html_sections(self):
