@@ -3,10 +3,9 @@ import os
 
 from slugify import slugify
 
-TARGET_DIR = 'output'
 CSV_SOURCE = 'Source.csv'
-HTML_TEMPLATE = os.path.join(TARGET_DIR, 'template.html')
-HTML_OUTFILE = os.path.join(TARGET_DIR, 'index.html')
+HTML_TEMPLATE = os.path.join('templates', 'template.html')
+HTML_OUTFILE = os.path.join('output', 'index.html')
 
 def read_csv_data(fn):
 	"""
