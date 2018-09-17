@@ -58,25 +58,8 @@ def htmlify(text, indentation):
     # Todo: parse lines beginning "* " as lists?
     """
     result_html = ""
-    list_mode = False
     for line in text.split("\n"):
         result_html += f"{indentation}<p>{line}</p>\n"
-        """
-        if line[:2] == "* ":
-            if not list_mode:
-                list_mode = True
-                result_html += f"{indentation}<ul>\n"
-            line = line[2:]
-            result_html += f"{indentation}    <li>{line}</li>\n"
-        else:
-            if list_mode == True:
-                list_mode = False
-                result_html += f"{indentation}</ul>\n"
-            result_html += f"{indentation}<p>{line}</p>\n"
-    if list_mode == True:
-        list_mode = False
-        result_html += f"{indentation}</ul>\n"
-        """
     return result_html
 
 def user_yes_no(prompt, default="n"):
