@@ -1,7 +1,12 @@
 import csv
 import os
 
-from slugify import slugify
+try:
+    from slugify import slugify
+except ImportError:
+    print("Slugify import failed.")
+    def slugify(string):
+        return string.lower().replace(' ', '-')
 
 CSV_SOURCE = 'Source.csv'
 HTML_TEMPLATE = os.path.join('templates', 'template.html')
@@ -10,12 +15,11 @@ HTML_OUTFILE = os.path.join('output', 'index.html')
 def read_csv_data(fn):
     """
     Read data from the CSV source file.
-    Ignore headers.
     :return: an iterable of rows of strings.
     """
     with open(fn, 'r', encoding="UTF-8") as infile:
         reader = csv.reader(infile)
-        headers = next(reader)
+        next(reader)  # Ignore headers.
         for line in reader:
             yield line
 
@@ -44,6 +48,22 @@ def post_process(string):
         string = "{} - {}".format(string, codes[string])
     return string
 
+def user_yes_no(prompt, default="n"):
+    """
+    Grab a simple yes or no from the user.
+    :return: True or False.
+    """
+    valid_responses = {'y': True, 'n': False}
+    prompt += " (y/n)\n".replace(default, default.upper())
+    response = input(prompt)
+    if not response:
+        result = default
+    elif response[0].lower()in valid_responses:
+        result = response
+    else:
+        result = default
+    return valid_responses[result]
+
 class Store:
     """
     Repository of RFP response information consisting of
@@ -54,10 +74,10 @@ class Store:
     def __init__(self, filename):
         data = read_csv_data(filename)
         self.sections = {}
-        i = 0
+        self.questions_count = 0
         header = ""
         for line in data:
-            i += 1
+            self.questions_count += 1
             if line[0] and line[0] != header:
                 header = line[0]
                 self.sections[header] = []
@@ -69,15 +89,17 @@ class Store:
                         print("The source data contains more than three columns in row {}. Exception row:".format(i))
                         print(line)
                         raise Exception
-        print("RFP Store data created successfully from {}.".format(filename))
-        print(i, "responses recorded.")
 
     def _barf_html(self):
-        indentation = '                '
+        """
+        Render HTML content for the questions and answers of each section.
+        """
+        indentation = '                '  # Todo: indent dynamically
         output = ""
         for section, contents in self.sections.items():
             # Section header:
-            output += '{}<h1 id="{}">{}</h1>\n'.format(indentation, slugify(section), section)
+            section_slug = slugify(section)
+            output += f'{indentation}<h1 id="{section_slug}">{section}</h1>\n'
             # Table of questions & answers:
             output += '{}<table>'.format(indentation)
             for question, answer in contents:
@@ -96,7 +118,7 @@ class Store:
                         if list_mode == True:
                             list_mode = False
                             answer_html += "{}</ul>\n".format(indentation)
-                        answer_html += "<p>{}</p>\n".format(post_process(answer_line))
+                        answer_html += "<p>{}</p>\n".format(answer_line)
                 output += "{}<tr><td>{}</td><td>{}</td></tr>".format(indentation, question_html, answer_html)
             output += "{}</table>".format(indentation)
         return output
@@ -112,7 +134,7 @@ class Store:
             output += html_section
         return output
 
-    def write_html(self, source_file=None, outfile=None):
+    def write_html(self):
         # TODO Honor indentation
         html = get_html_template(HTML_TEMPLATE)
         html = html.replace("{ HEADERS }", self._barf_html_sections())
@@ -122,7 +144,12 @@ class Store:
 
 def main():
     s = Store(CSV_SOURCE)
-    s.write_html()
+    print("RFP Store data created successfully from {}.".format(CSV_SOURCE))
+    print(s.questions_count, "responses recorded.")
+    html_desired = user_yes_no(f"Write HTML to {HTML_OUTFILE}?")
+    if html_desired:
+        s.write_html()
+        print(f"{HTML_OUTFILE} written.")
 
 if __name__ == "__main__":
     main()
