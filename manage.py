@@ -1,16 +1,12 @@
 import csv
 import os
 
-try:
-    from slugify import slugify
-except ImportError:
-    print("Slugify import failed.")
-    def slugify(string):
-        return string.lower().replace(' ', '-')
-
 CSV_SOURCE = 'Source.csv'
 HTML_TEMPLATE = os.path.join('templates', 'template.html')
 HTML_OUTFILE = os.path.join('output', 'index.html')
+
+def slugify(string):
+    return string.lower().replace(' ', '-')
 
 def read_csv_data(fn):
     """
@@ -33,20 +29,52 @@ def get_html_template(fn):
 
 def post_process(string):
     """
-    Remove double and trailing spaces.
+    Remove forbidden characters.
     Replace codes with words.
     """
     string = string.strip()
-    string = string.replace('  ', ' ')
+    forbidden = {"’": "'", '”': '"', '“': '"',
+                 '  ': ' ', '–': '-',
+                }
+    for forbidden, allowed in forbidden.items():
+        string = string.replace(forbidden, allowed)
     codes = {"Y": "Existing functionality",
                 "F": "On the roadmap",
                 "C": "Available by customization",
                 "V": "Available via a vendor",
                 "T": "Available via a third party",
+                "N": "Not available",
             }
-    if len(string) == 1 and string in codes.keys():
-        string = "{} - {}".format(string, codes[string])
-    return string
+    output = ""
+    for line in string.split('\n'):
+        if len(string) == 1 and string in codes.keys():
+            line = "{} - {}".format(string, codes[string])
+        output += line + "\n"
+    return output
+
+def htmlify(text, indentation):
+    """
+    Convert a text to basic HTML.
+    # Todo: render bulleted lists more nicely given that this is a tabular format.
+    """
+    result_html = ""
+    list_mode = False
+    for line in text.split("\n"):
+        if line[:2] == "* ":
+            if not list_mode:
+                list_mode = True
+                result_html += f"{indentation}<ul>\n"
+            line = line[2:]
+            result_html += f"{indentation}    <li>{line}</li>\n"
+        else:
+            if list_mode == True:
+                list_mode = False
+                result_html += f"{indentation}</ul>\n"
+            result_html += f"<p>{line}</p>\n"
+    if list_mode == True:
+        list_mode = False
+        result_html += f"{indentation}</ul>\n"
+    return result_html
 
 def user_yes_no(prompt, default="n"):
     """
@@ -86,7 +114,8 @@ class Store:
             if len(line) > 3:
                 for val in line[3:]:
                     if val:
-                        print("The source data contains more than three columns in row {}. Exception row:".format(i))
+                        print(f"The source data contains more than three columns in row {self.questions_count}.")
+                        print("Exception row:")
                         print(line)
                         raise Exception
 
@@ -101,26 +130,12 @@ class Store:
             section_slug = slugify(section)
             output += f'{indentation}<h1 id="{section_slug}">{section}</h1>\n'
             # Table of questions & answers:
-            output += '{}<table>'.format(indentation)
+            output += f'{indentation}<table>'
             for question, answer in contents:
-                question = post_process(question)
-                question_html ="<p>{}</p>\n".format(question)
-                answer_html = ""
-                list_mode = False
-                for answer_line in answer.split("\n"):
-                    answer_line = post_process(answer_line)
-                    if answer_line[:2] == "* ":
-                        if list_mode == False:
-                            list_mode = True
-                            answer_html += "{}<ul>\n".format(indentation)
-                        answer_html += "{}    <li>{}</li>\n".format(indentation, answer_line[2:])
-                    else:
-                        if list_mode == True:
-                            list_mode = False
-                            answer_html += "{}</ul>\n".format(indentation)
-                        answer_html += "<p>{}</p>\n".format(answer_line)
-                output += "{}<tr><td>{}</td><td>{}</td></tr>".format(indentation, question_html, answer_html)
-            output += "{}</table>".format(indentation)
+                question_html = htmlify(post_process(question), indentation)
+                answer_html = htmlify(post_process(answer), indentation)
+                output += f"{indentation}<tr><td>{question_html}</td><td>{answer_html}</td></tr>"
+            output += f"{indentation}</table>"
         return output
 
     def _barf_html_sections(self):
@@ -144,10 +159,9 @@ class Store:
 
 def main():
     s = Store(CSV_SOURCE)
-    print("RFP Store data created successfully from {}.".format(CSV_SOURCE))
-    print(s.questions_count, "responses recorded.")
-    html_desired = user_yes_no(f"Write HTML to {HTML_OUTFILE}?")
-    if html_desired:
+    print(f"RFP Store data created successfully from {CSV_SOURCE}.")
+    print(f"{s.questions_count} responses recorded.")
+    if user_yes_no(f"Write HTML to {HTML_OUTFILE}?", default='y'):
         s.write_html()
         print(f"{HTML_OUTFILE} written.")
 
