@@ -34,7 +34,7 @@ def post_process(string):
     """
     string = string.strip()
     forbidden = {"’": "'", '”': '"', '“': '"',
-                 '  ': ' ', '–': '-',
+                 '  ': ' ', '–': '-', "…": "...",
                 }
     for forbidden, allowed in forbidden.items():
         string = string.replace(forbidden, allowed)
