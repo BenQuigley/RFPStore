@@ -55,13 +55,10 @@ def post_process(string):
 def htmlify(text, indentation):
     """
     Convert a text to basic HTML.
-    # Todo: parse lines beginning "* " as lists?
     """
     result_html = ""
     list_mode = False
     for line in text.split("\n"):
-        result_html += f"{indentation}<p>{line}</p>\n"
-        """
         if line[:2] == "* ":
             if not list_mode:
                 list_mode = True
@@ -76,7 +73,6 @@ def htmlify(text, indentation):
     if list_mode == True:
         list_mode = False
         result_html += f"{indentation}</ul>\n"
-        """
     return result_html
 
 def user_yes_no(prompt, default="n"):
