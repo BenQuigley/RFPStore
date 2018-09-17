@@ -55,7 +55,6 @@ def post_process(string):
 def htmlify(text, indentation):
     """
     Convert a text to basic HTML.
-    # Todo: parse lines beginning "* " as lists?
     """
     result_html = ""
     for line in text.split("\n"):
