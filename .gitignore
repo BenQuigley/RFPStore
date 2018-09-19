@@ -1,0 +1,15 @@
+Source.csv
+
+output/
+
+*.xlsx
+*.swp
+
+test*
+.idea
+__pycache__/
+
+output/node_modules/
+
+# Automatically generated:
+output/index.html
