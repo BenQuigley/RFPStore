@@ -25,15 +25,15 @@ def choose_source():
     :return: a filename (string).
     """
     if len(sys.argv) > 1:
-        user_arg = sys.argv[1]
-        if os.path.isfile(sys.argv[1]):
-            return sys.argv[1]
-        else:
-            exception_text = f"A user argument ({user_arg}) was supplied, "\
-                    "but it isn't a file."
-            raise Exception(exception_text)
+        source = sys.argv[1]
     else:
-        return DEFAULT_SOURCE
+        source = DEFAULT_SOURCE
+    print(f'Looking for source data in "{source}".')
+    if os.path.isfile(source):
+        return source
+    else:
+        raise Exception(f'File ("{source}") not found.')
+        sys.exit()
 
 
 def read_csv_data(fn):
