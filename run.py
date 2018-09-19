@@ -1,12 +1,40 @@
 import csv
 import os
+import sys
 
-CSV_SOURCE = 'Source.csv'
+try:
+    from slugify import slugify
+except ImportError:
+    print('(Slugify import failed; using naive slug function instead.)')
+    def slugify(string):
+        return string.lower().replace(' ', '-')
+
+DEFAULT_SOURCE = 'Source.csv'
+EXAMPLE_SOURCE = 'Example.csv'
 HTML_TEMPLATE = os.path.join('templates', 'template.html')
 HTML_OUTFILE = os.path.join('output', 'index.html')
 
-def slugify(string):
-    return string.lower().replace(' ', '-')
+def choose_source():
+    """
+    Choose the CSV file from which to read sections, questions and answer 
+    content.
+    If the user supplies an argument, look for a file at that filename (and 
+    complain if one doesn't exist).
+    Otherwise use "Source.csv".
+    # todo Use a proper argument parser in order to supply a help function.
+    :return: a filename (string).
+    """
+    if len(sys.argv) > 1:
+        user_arg = sys.argv[1]
+        if os.path.isfile(sys.argv[1]):
+            return sys.argv[1]
+        else:
+            exception_text = f"A user argument ({user_arg}) was supplied, "\
+                    "but it isn't a file."
+            raise Exception(exception_text)
+    else:
+        return DEFAULT_SOURCE
+
 
 def read_csv_data(fn):
     """
@@ -119,7 +147,8 @@ class Store:
             for question, answer in contents:
                 question_html = htmlify(post_process(question), indentation)
                 answer_html = htmlify(post_process(answer), indentation)
-                output += f"{indentation}<tr><td>{question_html}</td><td>{answer_html}</td></tr>"
+                output += f"{indentation}<tr><td>{question_html}</td><td>"\
+                            "{answer_html}</td></tr>"
             output += f"{indentation}</table>"
         return output
 
@@ -143,12 +172,17 @@ class Store:
             outfile.write(html)
 
 def main():
-    s = Store(CSV_SOURCE)
-    print(f"RFP Store data created successfully from {CSV_SOURCE}.")
-    print(f"{s.questions_count} responses recorded.")
+    csv_source = choose_source()
+    s = Store(csv_source)
+    print(f"RFP Store data created successfully from {csv_source}.")
+    count = "{:,}".format(s.questions_count)
+    print(count, "responses recorded.")
     if user_yes_no(f"Write HTML to {HTML_OUTFILE}?", default='y'):
         s.write_html()
         print(f"{HTML_OUTFILE} written.")
+    else:
+        print("Exiting.")
+        sys.exit()
 
 if __name__ == "__main__":
     main()
