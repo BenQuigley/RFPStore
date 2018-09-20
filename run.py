@@ -47,9 +47,9 @@ def read_csv_data(fn):
         for line in reader:
             yield line
 
-def get_html_template(fn):
+def get_file_contents(fn):
     """
-    Read HTML data from the template source file.
+    Read the contents of file.
     :return: a string.
     """
     with open(fn, 'r') as infile:
@@ -165,7 +165,7 @@ class Store:
 
     def write_html(self):
         # TODO Honor indentation
-        html = get_html_template(HTML_TEMPLATE)
+        html = get_file_contents(HTML_TEMPLATE)
         html = html.replace("{ HEADERS }", self._barf_html_sections())
         html = html.replace("{ CONTENT }", self._barf_html())
         with open(HTML_OUTFILE, 'w') as outfile:
