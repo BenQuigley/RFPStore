@@ -1,6 +1,7 @@
 import csv
 import os
 import sys
+import webbrowser
 
 try:
     from slugify import slugify
@@ -180,9 +181,9 @@ def main():
     if user_yes_no(f"Write HTML to {HTML_OUTFILE}?", default='y'):
         s.write_html()
         print(f"{HTML_OUTFILE} written.")
-    else:
-        print("Exiting.")
-        sys.exit()
+        open_file = user_yes_no("Open it now in the web browser?", default='y')
+        if open_file:
+            webbrowser.open(HTML_OUTFILE)
 
 if __name__ == "__main__":
     main()
