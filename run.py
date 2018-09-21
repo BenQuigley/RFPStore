@@ -11,7 +11,7 @@ except ImportError:
         return string.lower().replace(' ', '-')
 
 DEFAULT_SOURCE = 'Source.csv'
-EXAMPLE_SOURCE = 'Example.csv'
+EXAMPLE_SOURCE = 'Sample.csv'
 HTML_TEMPLATE = os.path.join('templates', 'template.html')
 HTML_OUTFILE = os.path.join('output', 'index.html')
 
