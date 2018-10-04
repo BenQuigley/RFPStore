@@ -1,6 +1,7 @@
 import csv
 import os
 import sys
+import argparse
 import webbrowser
 
 try:
@@ -17,9 +18,9 @@ HTML_OUTFILE = os.path.join('output', 'index.html')
 
 def choose_source():
     """
-    Choose the CSV file from which to read sections, questions and answer 
+    Choose the CSV file from which to read sections, questions and answer
     content.
-    If the user supplies an argument, look for a file at that filename (and 
+    If the user supplies an argument, look for a file at that filename (and
     complain if one doesn't exist).
     Otherwise use "Source.csv".
     # todo Use a proper argument parser in order to supply a help function.
@@ -149,7 +150,7 @@ class Store:
                 question_html = htmlify(post_process(question), indentation)
                 answer_html = htmlify(post_process(answer), indentation)
                 output += f"{indentation}<tr><td>{question_html}</td><td>"\
-                            "{answer_html}</td></tr>"
+                           f"{answer_html}</td></tr>"
             output += f"{indentation}</table>"
         return output
 
