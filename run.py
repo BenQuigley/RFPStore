@@ -3,6 +3,7 @@ import os
 import sys
 import argparse
 import webbrowser
+from typing import Iterator
 
 try:
     from slugify import slugify
@@ -16,7 +17,7 @@ EXAMPLE_SOURCE = 'Sample.csv'
 HTML_TEMPLATE = os.path.join('templates', 'template.html')
 HTML_OUTFILE = os.path.join('output', 'index.html')
 
-def choose_source():
+def choose_source() -> str:
     """
     Choose the CSV file from which to read sections, questions and answer
     content.
@@ -37,8 +38,7 @@ def choose_source():
         raise Exception(f'File ("{source}") not found.')
         sys.exit()
 
-
-def read_csv_data(fn):
+def read_csv_data(fn: str) -> Iterator:
     """
     Read data from the CSV source file.
     :return: an iterable of rows of strings.
@@ -49,7 +49,7 @@ def read_csv_data(fn):
         for line in reader:
             yield line
 
-def get_file_contents(fn):
+def get_file_contents(fn: str) -> str:
     """
     Read the contents of file.
     :return: a string.
@@ -57,16 +57,16 @@ def get_file_contents(fn):
     with open(fn, 'r') as infile:
         return ''.join((line for line in infile))
 
-def post_process(string):
+def post_process(string: str) -> str:
     """
     Remove forbidden characters.
     Replace codes with words.
     """
     string = string.strip()
-    forbidden = {"’": "'", '”': '"', '“': '"',
+    forbidden_strings = {"’": "'", '”': '"', '“': '"',
                  '  ': ' ', '–': '-', "…": "...",
                 }
-    for forbidden, allowed in forbidden.items():
+    for forbidden, allowed in forbidden_strings.items():
         string = string.replace(forbidden, allowed)
     codes = {"Y": "Existing functionality",
                 "F": "On the roadmap",
@@ -82,7 +82,7 @@ def post_process(string):
         output += line + "\n"
     return output
 
-def htmlify(text, indentation):
+def htmlify(text: str, indentation: str):
     """
     Convert a text to basic HTML.
     """
@@ -91,7 +91,7 @@ def htmlify(text, indentation):
         result_html += f"{indentation}<p>{line}</p>\n"
     return result_html
 
-def user_yes_no(prompt, default="n"):
+def user_yes_no(prompt: str, default="n") -> bool:
     """
     Grab a simple yes or no from the user.
     :return: True or False.
@@ -114,7 +114,9 @@ class Store:
 
     write_html is used to create an html outfile in the target directory.
     """
-    def __init__(self, filename):
+    sections: dict
+    questions_count: int
+    def __init__(self, filename) -> None:
         data = read_csv_data(filename)
         self.sections = {}
         self.questions_count = 0
@@ -134,7 +136,7 @@ class Store:
                         print(line)
                         raise Exception
 
-    def _barf_html(self):
+    def _barf_html(self) -> str:
         """
         Render HTML content for the questions and answers of each section.
         """
@@ -154,7 +156,7 @@ class Store:
             output += f"{indentation}</table>"
         return output
 
-    def _barf_html_sections(self):
+    def _barf_html_sections(self) -> str:
         indentation = '                    '
         output = ""
         list_template = '{ind}<li>\n'\
@@ -173,7 +175,7 @@ class Store:
         with open(HTML_OUTFILE, 'w') as outfile:
             outfile.write(html)
 
-def main():
+def main() -> None:
     csv_source = choose_source()
     s = Store(csv_source)
     print(f"RFP Store data created successfully from {csv_source}.")
