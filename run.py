@@ -9,6 +9,7 @@ try:
     from slugify import slugify
 except ImportError:
     print('(Slugify import failed; using naive slug function instead.)')
+
     def slugify(string):
         return string.lower().replace(' ', '-')
 
@@ -16,6 +17,7 @@ DEFAULT_SOURCE = 'Source.csv'
 EXAMPLE_SOURCE = 'Sample.csv'
 HTML_TEMPLATE = os.path.join('templates', 'template.html')
 HTML_OUTFILE = os.path.join('output', 'index.html')
+
 
 def choose_source() -> str:
     """
@@ -38,6 +40,7 @@ def choose_source() -> str:
         raise Exception(f'File ("{source}") not found.')
         sys.exit()
 
+
 def read_csv_data(fn: str) -> Iterator:
     """
     Read data from the CSV source file.
@@ -49,6 +52,7 @@ def read_csv_data(fn: str) -> Iterator:
         for line in reader:
             yield line
 
+
 def get_file_contents(fn: str) -> str:
     """
     Read the contents of file.
@@ -57,6 +61,7 @@ def get_file_contents(fn: str) -> str:
     with open(fn, 'r') as infile:
         return ''.join((line for line in infile))
 
+
 def post_process(string: str) -> str:
     """
     Remove forbidden characters.
@@ -64,23 +69,24 @@ def post_process(string: str) -> str:
     """
     string = string.strip()
     forbidden_strings = {"’": "'", '”': '"', '“': '"',
-                 '  ': ' ', '–': '-', "…": "...",
-                }
+                         '  ': ' ', '–': '-', "…": "...",
+                         }
     for forbidden, allowed in forbidden_strings.items():
         string = string.replace(forbidden, allowed)
     codes = {"Y": "Existing functionality",
-                "F": "On the roadmap",
-                "C": "Available by customization",
-                "V": "Available via a vendor",
-                "T": "Available via a third party",
-                "N": "Not available",
-            }
+             "F": "On the roadmap",
+             "C": "Available by customization",
+             "V": "Available via a vendor",
+             "T": "Available via a third party",
+             "N": "Not available",
+             }
     output = ""
     for line in string.split('\n'):
         if len(string) == 1 and string in codes.keys():
             line = "{} - {}".format(string, codes[string])
         output += line + "\n"
     return output
+
 
 def htmlify(text: str, indentation: str):
     """
@@ -90,6 +96,7 @@ def htmlify(text: str, indentation: str):
     for line in text.split("\n"):
         result_html += f"{indentation}<p>{line}</p>\n"
     return result_html
+
 
 def user_yes_no(prompt: str, default="n") -> bool:
     """
@@ -107,6 +114,7 @@ def user_yes_no(prompt: str, default="n") -> bool:
         result = default
     return valid_responses[result]
 
+
 class Store:
     """
     Repository of RFP response information consisting of
@@ -116,6 +124,7 @@ class Store:
     """
     sections: dict
     questions_count: int
+
     def __init__(self, filename) -> None:
         data = read_csv_data(filename)
         self.sections = {}
@@ -131,7 +140,8 @@ class Store:
             if len(line) > 3:
                 for val in line[3:]:
                     if val:
-                        print(f"The source data contains more than three columns in row {self.questions_count}.")
+                        print((f'The source data contains more than three '
+                               'columns in row {self.questions_count}.'))
                         print("Exception row:")
                         print(line)
                         raise Exception
@@ -163,7 +173,8 @@ class Store:
             '{ind}    <a href="#{}">{}</a>\n'\
             '{ind}</li>\n'
         for section in self.sections:
-            html_section = list_template.format(slugify(section), section, ind=indentation)
+            html_section = list_template.format(slugify(section), section,
+                                                ind=indentation)
             output += html_section
         return output
 
@@ -174,6 +185,7 @@ class Store:
         html = html.replace("{ CONTENT }", self._barf_html())
         with open(HTML_OUTFILE, 'w') as outfile:
             outfile.write(html)
+
 
 def main() -> None:
     csv_source = choose_source()
@@ -187,6 +199,7 @@ def main() -> None:
         open_file = user_yes_no("Open it now in the web browser?", default='y')
         if open_file:
             webbrowser.open(HTML_OUTFILE)
+
 
 if __name__ == "__main__":
     main()
