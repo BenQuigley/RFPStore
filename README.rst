@@ -9,6 +9,14 @@ The HTML output uses Bootstrap. It is adapted from the
 template by [Start Bootstrap](https://startbootstrap.com). You can see a sample
 [here](https://blackrockdigital.github.io/startbootstrap-simple-sidebar/).
 
+Development To-Do
+-----------------
+
+1. Hook up to Heroku
+2. Create frontend for users in Bootstrap
+3. Implement backend in Flask
+4. Get everything out of the output/ folder that's not automatically generated.
+
 Requirements
 ------------
 
