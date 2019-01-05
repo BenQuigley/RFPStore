@@ -20,10 +20,7 @@ Development To-Do
 Requirements
 ------------
 
-[slugify](https://github.com/un33k/python-slugify) is used, but isn't strictly
-required. To install:
-
-    $ pip install slugify
+    $ pip install -r requirements.txt
 
 Usage
 -----
@@ -41,3 +38,11 @@ To use the default source data location of `Source.csv`, you can run the script
 with no arguments:
 
     $ python run.py
+
+Acknowledgements
+----------------
+
+Thank you to datademofun for the template at
+https://github.com/datademofun/heroku-basic-flask/
+
+Thank you to Heroku for the tutorials and hosting the site.
