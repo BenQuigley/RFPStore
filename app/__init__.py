@@ -1,5 +1,5 @@
 import logging
-from logging.handlers import SMTPHandler, RotatingFile  Handler
+from logging.handlers import SMTPHandler, RotatingFileHandler
 import os
 
 from flask import Flask
@@ -9,16 +9,4 @@ from config import Config
 app = Flask(__name__)
 app.config.from_object(Config)
 
-
-@app.route('/')
-def homepage():
-    the_time = datetime.now().strftime("%A, %d %b %Y %l:%M %p")
-
-    return """
-    <h1>Hello heroku</h1>
-    <p>It is currently {time}.</p>
-    """.format(time=the_time)
-
-
-if __name__ == '__main__':
-    app.run(debug=True, use_reloader=True)
+from app import routes
