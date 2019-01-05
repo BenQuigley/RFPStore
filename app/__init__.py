@@ -1,9 +1,13 @@
+import logging
+from logging.handlers import SMTPHandler, RotatingFile  Handler
+import os
+
 from flask import Flask
 from datetime import datetime
 from config import Config
 
 app = Flask(__name__)
-app.config_from_object(Config)
+app.config.from_object(Config)
 
 
 @app.route('/')
