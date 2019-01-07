@@ -32,7 +32,7 @@ def choose_source() -> str:
     if len(sys.argv) > 1:
         source = sys.argv[1]
     else:
-        source = DEFAULT_SOURCE
+        source = EXAMPLE_SOURCE
     print(f'Looking for source data in "{source}".')
     if os.path.isfile(source):
         return source
