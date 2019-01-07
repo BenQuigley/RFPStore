@@ -1,12 +1,31 @@
 import logging
-from logging.handlers import SMTPHandler, RotatingFileHandler
-import os
+import sys
 
 from flask import Flask
 from datetime import datetime
 from config import Config
 
 app = Flask(__name__)
-app.config.from_object(Config)
 
-from app import routes
+'''
+Logger Settings
+'''
+app.logger.setLevel(logging.INFO)
+app.logger.info("RFP Factory startup.")
+app.logger.addHandler(logging.StreamHandler(sys.stdout))
+
+'''
+App Settings
+'''
+ALLOWED_EXTENSIONS = set(['txt', 'csv'])
+UPLOAD_FOLDER = '/tmp/'
+
+app.config.from_object(Config)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
+
+from app import routes  # noqa

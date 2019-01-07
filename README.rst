@@ -14,7 +14,7 @@ Development To-Do
 
 1. Hook up to Heroku
 2. Create frontend for users in Bootstrap
-3. Implement backend in Flask
+3. Implement file upload in Flask
 4. Get everything out of the output/ folder that's not automatically generated.
 
 Requirements
