@@ -93,6 +93,7 @@ def htmlify(text: str, indentation: str):
     Convert a text to basic HTML.
     """
     result_html = ""
+    list_mode = False
     for line in text.split("\n"):
         if line[:2] == "* ":
             if not list_mode:
@@ -186,6 +187,7 @@ class Store:
             '{ind}    <a href="#{}">{}</a>\n'\
             '{ind}</li>\n'
         for section in self.sections:
+            print(section)
             html_section = list_template.format(slugify(section), section,
                                                 ind=indentation)
             output += html_section
