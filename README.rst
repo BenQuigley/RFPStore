@@ -16,6 +16,7 @@ Development To-Do
 2. Create frontend for users in Bootstrap
 3. Implement file upload in Flask
 4. Get everything out of the output/ folder that's not automatically generated.
+5. Write tests
 
 Requirements
 ------------
