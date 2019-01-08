@@ -12,7 +12,6 @@ Logger Settings
 '''
 app.logger.setLevel(logging.INFO)
 app.logger.info("RFP Factory startup.")
-app.logger.addHandler(logging.StreamHandler(sys.stdout))
 
 '''
 App Settings
