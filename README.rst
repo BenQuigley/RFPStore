@@ -1,13 +1,8 @@
-RFP Store
-=========
+RFP Factory
+===========
 
 This Python script creates static web pages for the purpose of
 displaying question and answer text in a sectioned format.
-
-The HTML output uses Bootstrap. It is adapted from the `simple-sidebar
-<https://github.com/BlackrockDigital/startbootstrap-simple-sidebar>`__ template
-by `Start Bootstrap <https://startbootstrap.com>`__. You can see a sample `here
-<https://blackrockdigital.github.io/startbootstrap-simple-sidebar/>`__.
 
 Development To-Do
 -----------------
@@ -43,13 +38,6 @@ with:
 
    $ python run.py Sample.csv
 
-To use the default source data location of ``Source.csv``, you can run
-the script with no arguments:
-
-::
-
-   $ python run.py
-
 Acknowledgements
 ----------------
 
@@ -57,3 +45,8 @@ Thank you to datademofun for the template at
 https://github.com/datademofun/heroku-basic-flask/
 
 Thank you to Heroku for the tutorials and hosting the site.
+
+Thank you to `Start Bootstrap <https://startbootstrap.com>`__ for the
+`simple-sidebar
+<https://github.com/BlackrockDigital/startbootstrap-simple-sidebar>`__ template
+which was adapted for this tool's output.
