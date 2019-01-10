@@ -20,11 +20,11 @@ def index():
             app.logger.info(f"Errors: {form.errors}")
         else:
             app.logger.info("Form submitted.")
-            file = request.files['file']
-            filename = secure_filename(file.filename)
-            app.logger.info(f"Upload requested: {file}")
+            form_file = request.files['file']
+            filename = secure_filename(form_file.filename)
+            app.logger.info(f"Upload requested: {form_file}")
             if not allowed_file(filename):
-                app.logger.info("Disallowed filename: {}".format(file))
+                app.logger.info("Disallowed filename: {}".format(filename))
             else:
                 local_path = os.path.join(app.config['UPLOAD_FOLDER'],
                                           filename)
