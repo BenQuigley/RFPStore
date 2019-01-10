@@ -1,4 +1,6 @@
 env/
+
+.env
 Source.csv
 
 *.xlsx
@@ -7,6 +9,7 @@ Source.csv
 test*
 .idea
 __pycache__/
+*.pyc
 
 output/node_modules/
 
