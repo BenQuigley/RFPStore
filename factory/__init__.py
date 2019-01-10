@@ -13,11 +13,19 @@ except ImportError:
     def slugify(string):
         return string.lower().replace(' ', '-')
 
+VERBOSE = False
 DEFAULT_SOURCE = 'Source.csv'
 EXAMPLE_SOURCE = 'Sample.csv'
-HTML_TEMPLATE = os.path.join('templates', 'template.html')
-HTML_OUTFILE = os.path.join('output', 'index.html')
+HTML_TEMPLATE = os.path.join('template', 'template.html')
+HTML_OUTFILE = os.path.join('template', 'index.html')
 
+
+def printv(*args, **kwargs):
+    '''
+    Print only if in verbose mode.
+    '''
+    if VERBOSE:
+        print(*args)
 
 def choose_source() -> str:
     """
@@ -33,7 +41,7 @@ def choose_source() -> str:
         source = sys.argv[1]
     else:
         source = EXAMPLE_SOURCE
-    print(f'Looking for source data in "{source}".')
+    printv(f'Looking for source data in "{source}".')
     if os.path.isfile(source):
         return source
     else:
@@ -118,14 +126,14 @@ def user_yes_no(prompt: str, default="n") -> bool:
     :return: True or False.
     """
     valid_responses = {'y': True, 'n': False}
-    prompt += " (y/n)\n".replace(default, default.upper())
-    response = input(prompt)
-    if not response:
-        result = default
-    elif response[0].lower()in valid_responses:
-        result = response
-    else:
-        result = default
+    result = default
+    if VERBOSE:
+        prompt += " (y/n)\n".replace(default, default.upper())
+        response = input(prompt)
+        if not response:
+            result = default
+        elif response[0].lower()in valid_responses:
+            result = response
     return valid_responses[result]
 
 
@@ -154,10 +162,9 @@ class Store:
             if len(line) > 3:
                 for val in line[3:]:
                     if val:
-                        print((f'The source data contains more than three '
-                               'columns in row {self.questions_count}.'))
-                        print("Exception row:")
-                        print(line)
+                        exception = ('The source data contains more than three'
+                                     f' columns in row {self.questions_count}.'
+                                     'Exception row:' + line)
                         raise Exception
 
     def _barf_html(self) -> str:
@@ -187,7 +194,7 @@ class Store:
             '{ind}    <a href="#{}">{}</a>\n'\
             '{ind}</li>\n'
         for section in self.sections:
-            print(section)
+            printv(section)
             html_section = list_template.format(slugify(section), section,
                                                 ind=indentation)
             output += html_section
@@ -205,12 +212,12 @@ class Store:
 def main() -> None:
     csv_source = choose_source()
     s = Store(csv_source)
-    print(f"RFP Store data created successfully from {csv_source}.")
+    printv(f"RFP Store data created successfully from {csv_source}.")
     count = "{:,}".format(s.questions_count)
-    print(count, "responses recorded.")
+    printv(count, "responses recorded.")
     if user_yes_no(f"Write HTML to {HTML_OUTFILE}?", default='y'):
         s.write_html(HTML_OUTFILE)
-        print(f"{HTML_OUTFILE} written.")
+        printv(f"{HTML_OUTFILE} written.")
         open_file = user_yes_no("Open it now in the web browser?", default='y')
         if open_file:
             webbrowser.open(HTML_OUTFILE)
