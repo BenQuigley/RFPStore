@@ -11,7 +11,7 @@ from flask import (
 )
 from werkzeug import secure_filename
 
-from app import app, allowed_file
+from app import app, allowed_file, zipdir
 from app.forms import UploadForm
 from factory import Store
 
@@ -46,6 +46,11 @@ def index():
                 target_path = os.path.join(working_dir,
                                            'index.html')
                 s.write_html(target_path)
+                zip_name = 'RFP-store.zip'
+                z = zipfile.ZipFile(zip_name, 'w', 
+                                    zipfile.ZIP_DEFLATED)
+                z.write(target_path)
+                zipdir(___, z)
                 return send_from_directory(directory=working_dir,
                                            filename='index.html',
                                            as_attachment=True)
