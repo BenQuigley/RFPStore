@@ -1,3 +1,4 @@
+import os
 from flask import render_template, flash, redirect, url_for, request
 from werkzeug import secure_filename
 
@@ -13,17 +14,22 @@ def landing():
 @app.route('/home', methods=['GET', 'POST'])
 def index():
     form = UploadForm()
-    if request.method == 'POST' and form.validate_on_submit():
-        app.logger.info("Form submitted.")
-        flash("Upload requested.")
-        filename = request.files['file']
-        if filename and allowed_file(filename):
+    if request.method == 'POST':
+        valid = form.validate_on_submit()
+        if not valid:
+            app.logger.info(f"Errors: {form.errors}")
+        else:
+            app.logger.info("Form submitted.")
+            file = request.files['file']
             filename = secure_filename(file.filename)
-            app.logger.info(f"Saving file as: {filename}")
-            form.file.data.save(os.path.join(app.config['UPLOAD_FOLDER'],
-                                filename))
-        return redirect(url_for('index'))
-    else:
-        app.logger.info(form.validate_on_submit())
+            app.logger.info(f"Upload requested: {file}")
+            if not allowed_file(filename):
+                app.logger.info("Disallowed filename: {}".format(file))
+            else:
+                local_path = os.path.join(app.config['UPLOAD_FOLDER'],
+                                          filename)
+                app.logger.info(f"Saving file as: {local_path}")
+                form.file.data.save(local_path)
+    # This is a one-page web site right now.
     return render_template('home.html', title='Home',
                            form=form)
