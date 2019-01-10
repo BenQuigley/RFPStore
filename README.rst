@@ -18,6 +18,7 @@ Development To-Do
    e. Zip the results
    f. Serve the user the result
 3. Write tests
+4. Add flashing of messages to the HTML
 
 Requirements
 ------------

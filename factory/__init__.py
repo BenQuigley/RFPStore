@@ -193,12 +193,12 @@ class Store:
             output += html_section
         return output
 
-    def write_html(self):
+    def write_html(self, target_location):
         # TODO Honor indentation
         html = get_file_contents(HTML_TEMPLATE)
         html = html.replace("{ HEADERS }", self._barf_html_sections())
         html = html.replace("{ CONTENT }", self._barf_html())
-        with open(HTML_OUTFILE, 'w') as outfile:
+        with open(target_location, 'w') as outfile:
             outfile.write(html)
 
 
@@ -209,7 +209,7 @@ def main() -> None:
     count = "{:,}".format(s.questions_count)
     print(count, "responses recorded.")
     if user_yes_no(f"Write HTML to {HTML_OUTFILE}?", default='y'):
-        s.write_html()
+        s.write_html(HTML_OUTFILE)
         print(f"{HTML_OUTFILE} written.")
         open_file = user_yes_no("Open it now in the web browser?", default='y')
         if open_file:
