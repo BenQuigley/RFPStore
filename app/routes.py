@@ -1,6 +1,10 @@
+import io
 import os
 import zipfile
-
+import flask
+from app.forms import UploadForm
+from app import app, allowed_file, zipdir
+from factory import Store
 from flask import (
         flash,
         redirect,
@@ -10,10 +14,6 @@ from flask import (
         url_for,
 )
 from werkzeug import secure_filename
-
-from app import app, allowed_file, zipdir
-from app.forms import UploadForm
-from factory import Store
 
 
 @app.route('/')
@@ -33,27 +33,35 @@ def index():
             app.logger.info("Form submitted.")
             working_dir = app.config['UPLOAD_FOLDER']
             form_file = request.files['file']
-            filename = secure_filename(form_file.filename)
+            user_filename = secure_filename(form_file.filename)
             app.logger.info(f"Upload requested: {form_file}")
-            if not allowed_file(filename):
-                app.logger.info("Disallowed filename: {}".format(filename))
+            if not allowed_file(user_filename):
+                app.logger.info(f"Disallowed filename: {user_filename}")
             else:
-                local_path = os.path.join(working_dir,
-                                          filename)
-                app.logger.info(f"Saving file as: {local_path}")
-                form.file.data.save(local_path)
-                s = Store(local_path)
-                target_path = os.path.join(working_dir,
-                                           'index.html')
+
+                # Then a CSV file has been uploaded. Save it, create an RFP
+                # Store file, zip the result, and serve it back to the user.
+
+                # Strings:
+                user_filepath = os.path.join(working_dir, user_filename)
+                home_name = 'index.html'
+                target_path = os.path.join(working_dir, home_name)
+                template_path = os.path.join('app', 'template')
+                app.logger.info(f"Saving file as: {user_filepath}")
+
+                form.file.data.save(user_filepath)
+                s = Store(user_filepath)
                 s.write_html(target_path)
-                zip_name = 'RFP-store.zip'
-                z = zipfile.ZipFile(zip_name, 'w', 
-                                    zipfile.ZIP_DEFLATED)
-                z.write(target_path)
-                zipdir(___, z)
-                return send_from_directory(directory=working_dir,
-                                           filename='index.html',
-                                           as_attachment=True)
+                app.logger.info(f"Saving output as {target_path}.")
+                zip_data = io.BytesIO()
+                with zipfile.ZipFile(zip_data, 'w', zipfile.ZIP_DEFLATED) as z:
+                    z.write(target_path, arcname='index.html')
+                    zipdir(template_path, z)
+                zip_data.seek(0)
+                return flask.send_file(zip_data,
+                                       mimetype='application/zip',
+                                       as_attachment=True,
+                                       attachment_filename='RFP-store.zip')
 
     # This is a one-page web site right now.
     return render_template('home.html', title='Home',
