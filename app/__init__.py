@@ -19,7 +19,6 @@ app.logger.info("RFP Factory startup.")
 App Settings
 '''
 
-ALLOWED_EXTENSIONS = set(['csv'])
 UPLOAD_FOLDER = '/tmp/'
 
 app.config.from_object(Config)

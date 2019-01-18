@@ -26,6 +26,9 @@ def zipdir(path, ziph):
     '''
     Add a directory to a ziph.
     '''
+    if not os.path.isdir(path):
+        wd = os.getcwd()
+        raise Exception(f"{path} is not a path in {wd}; can't make zipdir.")
     for root, dirs, files in os.walk(path):
         for fn in files:
             file_path = os.path.join(root, fn)
@@ -63,7 +66,7 @@ def index():
                 user_filepath = os.path.join(working_dir, user_filename)
                 home_name = 'index.html'
                 target_path = os.path.join(working_dir, home_name)
-                template_path = os.path.join('app', 'template')
+                template_path = 'template'
                 app.logger.info(f"Saving file as: {user_filepath}")
 
                 form.file.data.save(user_filepath)
