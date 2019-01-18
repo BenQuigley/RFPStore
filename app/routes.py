@@ -3,7 +3,7 @@ import os
 import zipfile
 import flask
 from app.forms import UploadForm
-from app import app, allowed_file, zipdir
+from app import app
 from factory import Store
 from flask import (
         flash,
@@ -14,6 +14,23 @@ from flask import (
         url_for,
 )
 from werkzeug import secure_filename
+
+ALLOWED_EXTENSIONS = set(['csv'])
+
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
+
+def zipdir(path, ziph):
+    '''
+    Add a directory to a ziph.
+    '''
+    for root, dirs, files in os.walk(path):
+        for fn in files:
+            file_path = os.path.join(root, fn)
+            app.logger.info(f"Writing {file_path}")
+            ziph.write(file_path)
 
 
 @app.route('/')
