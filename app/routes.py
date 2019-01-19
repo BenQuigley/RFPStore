@@ -15,7 +15,7 @@ from flask import (
 )
 from werkzeug import secure_filename
 
-ALLOWED_EXTENSIONS = set(['csv'])
+ALLOWED_EXTENSIONS = ('csv')
 
 
 def allowed_file(filename):
@@ -66,7 +66,8 @@ def index():
                 user_filepath = os.path.join(working_dir, user_filename)
                 home_name = 'index.html'
                 target_path = os.path.join(working_dir, home_name)
-                template_path = 'rfp-store'
+                page_root = 'rfp-store'
+                main_page_name = os.path.join(page_root, home_name)
                 app.logger.info(f"Saving file as: {user_filepath}")
 
                 form.file.data.save(user_filepath)
@@ -75,8 +76,8 @@ def index():
                 app.logger.info(f"Saving output as {target_path}.")
                 zip_data = io.BytesIO()
                 with zipfile.ZipFile(zip_data, 'w', zipfile.ZIP_DEFLATED) as z:
-                    z.write(target_path, arcname='index.html')
-                    zipdir(template_path, z)
+                    z.write(target_path, arcname=main_page_name)
+                    zipdir(page_root, z)
                 zip_data.seek(0)
                 return flask.send_file(zip_data,
                                        mimetype='application/zip',
