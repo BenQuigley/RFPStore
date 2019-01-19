@@ -16,8 +16,8 @@ except ImportError:
 VERBOSE = False
 DEFAULT_SOURCE = 'Source.csv'
 EXAMPLE_SOURCE = 'Sample.csv'
-HTML_TEMPLATE = os.path.join('template', 'template.html')
-HTML_OUTFILE = os.path.join('template', 'index.html')
+HTML_TEMPLATE = os.path.join('rfp-store', 'template.html')
+HTML_OUTFILE = os.path.join('rfp-store', 'index.html')
 
 
 def printv(*args, **kwargs):

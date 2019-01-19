@@ -14,5 +14,5 @@ __pycache__/
 output/node_modules/
 
 # Automatically generated:
-output/index.html
+index.html
 .mypy_cache/

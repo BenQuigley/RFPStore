@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Sign In</h1>
+    <h1>RFP Factory</h1>
+    <p>The RFP Factory generates RFP Stores.</p>
+    <p>An RFP Store looks like this:</p>
     <form method=post enctype="multipart/form-data">
         {{ form.hidden_tag() }}
         <input type=file name=file>
