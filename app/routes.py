@@ -15,11 +15,10 @@ from flask import (
 )
 from werkzeug import secure_filename
 
-ALLOWED_EXTENSIONS = ('csv')
 
-
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+def allowed_extension(filename):
+    allowed = ('csv')
+    return '.' in filename and filename.rsplit('.', 1)[1] in allowed
 
 
 def zipdir(path, ziph):
@@ -55,7 +54,7 @@ def index():
             form_file = request.files['file']
             user_filename = secure_filename(form_file.filename)
             app.logger.info(f"Upload requested: {form_file}")
-            if not allowed_file(user_filename):
+            if not allowed_extension(user_filename):
                 app.logger.info(f"Disallowed filename: {user_filename}")
             else:
 
