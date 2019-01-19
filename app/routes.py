@@ -66,7 +66,7 @@ def index():
                 user_filepath = os.path.join(working_dir, user_filename)
                 home_name = 'index.html'
                 target_path = os.path.join(working_dir, home_name)
-                template_path = 'template'
+                template_path = 'rfp-store'
                 app.logger.info(f"Saving file as: {user_filepath}")
 
                 form.file.data.save(user_filepath)
