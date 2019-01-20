@@ -7,22 +7,11 @@ displaying question and answer text in a sectioned format.
 Development To-Do
 -----------------
 
-1. Get everything out of the output/ folder that’s not automatically
-   generated.
+1. Write tests.
 
-2. Make the user interface serve up files for the user. 
+2. Make the RFP store product a one-page web site.
 
-   a. Hash the file - start here  
-      https://stackoverflow.com/questions/1303021/shortest-hash-in-python-to-name-cache-files
-   b. Create a dir /tmp/{hash}
-   c. Save the file there
-   d. Run the main script
-   e. Zip the results
-   f. Serve the user the result
-
-3. Write tests
-
-4. Add flashing of messages to the HTML
+3. Add flashing of messages to the HTML.
 
 Requirements
 ------------

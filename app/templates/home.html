@@ -1,26 +1,75 @@
 {% extends "base.html" %}
-
 {% block content %}
-    <h1>RFP Factory</h1>
-    <p>The RFP Factory generates RFP Stores.</p>
-    <p>An RFP Store looks like this:</p>
-    <table>
-        <tr><td>Section</td><td>Question</td><td>Response</td></tr>
-        <tr><td>Section</td><td>Question</td><td>Response</td></tr>
-        <tr><td>Section</td><td>Question</td><td>Response</td></tr>
-        <tr><td>Section</td><td>Question</td><td>Response</td></tr>
-        <tr><td>Section</td><td>Question</td><td>Response</td></tr>
-        <tr><td>Section</td><td>Question</td><td>Response</td></tr>
-        <tr><td>Section</td><td>Question</td><td>Response</td></tr>
-        <tr><td>Section</td><td>Question</td><td>Response</td></tr>
-        <tr><td>Section</td><td>Question</td><td>Response</td></tr>
-        <tr><td>Section</td><td>Question</td><td>Response</td></tr>
-        <tr><td>Section</td><td>Question</td><td>Response</td></tr>
-        <tr><td>Section</td><td>Question</td><td>Response</td></tr>
-    </table>
-    <form method=post enctype="multipart/form-data">
-        {{ form.hidden_tag() }}
-        <input type=file name=file>
-        <input type=submit value=Upload>
-    </form>
+  <h1>RFP Factory</h1>
+  <p>The RFP Factory generates RFP Stores.</p>
+  <form method=post enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+    <input type=file name=file>
+    <input type=submit value=Upload>
+  </form>
+  <div class="examples">
+      <h2> Examples<h2>
+    <h3>Example Input</h3>
+    <h4>Screenshot</h4>
+    <img src="static/csv-screen.png" alt="a screenshot of the upload format">
+    <h4>Download</h4>
+    <a href="download-example.csv">Example.csv</a>
+    <h3>Example Output</h3>
+    <h4>Screenshot</h4>
+    <img src="static/csv-screen.png" alt="a screenshot of the output format">
+    <h4>Download</h4>
+    <a href="result-example.html">RFP-Store.html</a>
+  </div>
+  </div>
+  <div class="about">
+    <h2>About</h2>
+    <div class='table-responsive'>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Question</th>
+            <th scope="col">Answer</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">What does this site do?</td>
+            <td>
+              This site is called the "RFP Factory." You upload a
+              question-and-answer sheet in CSV format to it, and it will format
+              the contents for you as a stylish Bootstrap web page, an RFP 
+              Store.
+            </td>
+          </tr>
+          <tr><th scope="row">What is the RFP Store for?</th>
+            <td>
+              It's an knowledge base: an easy-to-maintain and easy-to-use
+              reference guide for your coworkers, family, or clients.
+            </td></tr>
+          <tr>
+            <th scope="row">What do I do with the RFP Store page?</th>
+            <td>
+              Your RFP Store page will be a static web page, so you can 
+              host this static page online if you like, or just
+              keep it in your private Dropbox or SharePoint instance if 
+              you prefer to keep your knowledge base private.
+            </td>
+          </tr>
+          <tr>
+              <th scope="row">What happens when I need to edit my RFP Store?</th>
+              <td>
+                You could always edit the raw HTML, but the easiest way 
+                is just to keep your original CSV source file around.
+                When a new question and answer need to be added to the 
+                knowledge base, just add it to the spreadsheet, and upload it
+                here again to create a new RFP Store.
+              </td>
+          </tr>
+          <tr><th scope="row">How does it work?</th>
+            <td>You can view the source code by clicking the "Source Code" 
+            link at the bottom of the page.</td></tr>
+          <tr><th scope="row"></th><td></td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 {% endblock %}
