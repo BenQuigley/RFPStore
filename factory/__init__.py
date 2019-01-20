@@ -27,6 +27,7 @@ def printv(*args, **kwargs):
     if VERBOSE:
         print(*args)
 
+
 def choose_source() -> str:
     """
     Choose the CSV file from which to read sections, questions and answer
