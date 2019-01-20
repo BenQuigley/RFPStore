@@ -13,6 +13,11 @@ Development To-Do
 
 3. Add flashing of messages to the HTML.
 
+4. Make the factory write a warning comment to the top of any output file, 
+   letting the user know that the file was automatically generated and 
+   that they shouldn't change its contents manually if they want to be able 
+   to re-create it using the factory.
+
 Requirements
 ------------
 
@@ -27,15 +32,15 @@ To generate an RFP store in ``output/index.html``:
 
 ::
 
-   $ python run.py your-data.csv
+   $ python factory.py your-data.csv
 
-An example source file is supplied in ``Sample.csv``. An example output
-file can be viewed at ``output/sample.html``, or you can generate one
-with:
+An example source file is supplied in ``app/static/example.csv``. An example
+output file can be viewed at ``app/static/sample.html``, or you can generate
+one with:
 
 ::
 
-   $ python run.py Sample.csv
+   $ python factory.py app/static/example.csv
 
 Acknowledgements
 ----------------
