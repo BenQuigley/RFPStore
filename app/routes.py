@@ -4,7 +4,7 @@ import zipfile
 import flask
 from app.forms import UploadForm
 from app import app
-from factory import Store
+from app import factory
 from flask import (
         flash,
         redirect,
@@ -70,7 +70,7 @@ def index():
                 app.logger.info(f"Saving file as: {user_filepath}")
 
                 form.file.data.save(user_filepath)
-                s = Store(user_filepath)
+                s = factory.Store(user_filepath)
                 s.write_html(target_path)
                 app.logger.info(f"Saving output as {target_path}.")
                 zip_data = io.BytesIO()
