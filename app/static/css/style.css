@@ -5,3 +5,8 @@ body {
 h1, h2, h3 {
   color: #284b50;
 }
+
+.screenshot {
+  max-width: 65%;
+  max-height: 65%;
+}
