@@ -14,8 +14,7 @@ except ImportError:
         return string.lower().replace(' ', '-')
 
 VERBOSE = False
-DEFAULT_SOURCE = 'Source.csv'
-EXAMPLE_SOURCE = 'Sample.csv'
+EXAMPLE_SOURCE = 'sample.csv'
 HTML_TEMPLATE = os.path.join('rfp-store', 'template.html')
 HTML_OUTFILE = os.path.join('rfp-store', 'index.html')
 
@@ -26,6 +25,7 @@ def printv(*args, **kwargs):
     '''
     if VERBOSE:
         print(*args)
+
 
 def choose_source() -> str:
     """
