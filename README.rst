@@ -9,11 +9,9 @@ Development To-Do
 
 1. Write tests.
 
-2. Make the RFP store product a one-page web site.
+2. Add flashing of messages to the HTML.
 
-3. Add flashing of messages to the HTML.
-
-4. Make the factory write a warning comment to the top of any output file, 
+3. Make the factory write a warning comment to the top of any output file, 
    letting the user know that the file was automatically generated and 
    that they shouldn't change its contents manually if they want to be able 
    to re-create it using the factory.
